@@ -1,0 +1,497 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MBTI to Big Five Mapping",
+  "version": "1.0.0",
+  "description": "16种MBTI类型到Big Five人格参数的映射表，包含典型得分区间和加权逻辑",
+  "mapping_algorithm": {
+    "name": "加权维度映射法 (Weighted Dimension Mapping)",
+    "version": "1.0.0",
+    "description": "将MBTI四个维度(I/E, S/N, T/F, J/P)分别映射到Big Five五个维度，使用加权公式计算最终得分",
+    "dimension_mapping": {
+      "EI_to_Extraversion": {
+        "description": "MBTI的E/I维度主要映射到Big Five的外向性(E)，同时影响开放性(O)和宜人性(A)",
+        "primary_mapping": "Extraversion",
+        "primary_weight": 0.7,
+        "secondary_mappings": [
+          { "target": "Openness", "weight": 0.15, "direction": "E_positive" },
+          { "target": "Agreeableness", "weight": 0.15, "direction": "E_positive" }
+        ]
+      },
+      "SN_to_Openness": {
+        "description": "MBTI的S/N维度主要映射到Big Five的开放性(O)，同时影响尽责性(C)",
+        "primary_mapping": "Openness",
+        "primary_weight": 0.8,
+        "secondary_mappings": [
+          { "target": "Conscientiousness", "weight": 0.2, "direction": "S_positive" }
+        ]
+      },
+      "TF_to_Agreeableness": {
+        "description": "MBTI的T/F维度主要映射到Big Five的宜人性(A)，同时影响神经质(N)",
+        "primary_mapping": "Agreeableness",
+        "primary_weight": 0.75,
+        "secondary_mappings": [
+          { "target": "Neuroticism", "weight": 0.25, "direction": "F_positive" }
+        ]
+      },
+      "JP_to_Conscientiousness": {
+        "description": "MBTI的J/P维度主要映射到Big Five的尽责性(C)，同时影响神经质(N)和外向性(E)",
+        "primary_mapping": "Conscientiousness",
+        "primary_weight": 0.7,
+        "secondary_mappings": [
+          { "target": "Neuroticism", "weight": 0.15, "direction": "P_positive" },
+          { "target": "Extraversion", "weight": 0.15, "direction": "J_positive" }
+        ]
+      }
+    },
+    "scoring_formula": {
+      "description": "对每个MBTI维度，根据偏好方向(E/I等)计算该维度对各Big Five维度的贡献值，然后加总",
+      "formula": "BigFive[d] = base_50 + sum_over_MBTI_dims(mbti_dim.direction * mbti_dim.mapping[d].weight * range_25)",
+      "parameters": {
+        "base_50": "基准分50分，保证所有类型在0-100范围内",
+        "range_25": "每个MBTI维度的影响力为±25分，保证总分在合理范围",
+        "direction": "E=+1, I=-1; N=+1, S=-1; F=+1, T=-1; J=+1, P=-1"
+      }
+    }
+  },
+  "personality_types": {
+    "INTJ": {
+      "mbti": "INTJ",
+      "name_cn": "建筑师",
+      "name_en": "Architect",
+      "big_five": {
+        "openness": 75,
+        "conscientiousness": 80,
+        "extraversion": 20,
+        "agreeableness": 30,
+        "neuroticism": 40
+      },
+      "score_ranges": {
+        "openness": { "min": 65, "max": 85, "typical": 75 },
+        "conscientiousness": { "min": 70, "max": 90, "typical": 80 },
+        "extraversion": { "min": 10, "max": 35, "typical": 20 },
+        "agreeableness": { "min": 20, "max": 45, "typical": 30 },
+        "neuroticism": { "min": 30, "max": 55, "typical": 40 }
+      },
+      "traits_description": "战略思维者，独立、果断、高标准，喜欢复杂系统的分析和规划。内向但思想开放，逻辑驱动决策。",
+      "language_style_tags": ["理性型", "结构化", "深度思辨", "简洁有力"],
+      "behavior_tags": ["规划型", "独立型", "高标准化", "分析型"]
+    },
+    "INTP": {
+      "mbti": "INTP",
+      "name_cn": "逻辑学家",
+      "name_en": "Logician",
+      "big_five": {
+        "openness": 88,
+        "conscientiousness": 45,
+        "extraversion": 18,
+        "agreeableness": 35,
+        "neuroticism": 50
+      },
+      "score_ranges": {
+        "openness": { "min": 80, "max": 95, "typical": 88 },
+        "conscientiousness": { "min": 30, "max": 60, "typical": 45 },
+        "extraversion": { "min": 8, "max": 30, "typical": 18 },
+        "agreeableness": { "min": 25, "max": 50, "typical": 35 },
+        "neuroticism": { "min": 40, "max": 65, "typical": 50 }
+      },
+      "traits_description": "创新思想家，热爱理论和抽象概念，灵活开放但可能缺乏执行力。内向、好奇、逻辑严谨。",
+      "language_style_tags": ["逻辑派", "抽象型", "探索式", "精确表达"],
+      "behavior_tags": ["探索型", "分析型", "灵活型", "独立思考"]
+    },
+    "ENTJ": {
+      "mbti": "ENTJ",
+      "name_cn": "指挥官",
+      "name_en": "Commander",
+      "big_five": {
+        "openness": 70,
+        "conscientiousness": 88,
+        "extraversion": 80,
+        "agreeableness": 28,
+        "neuroticism": 30
+      },
+      "score_ranges": {
+        "openness": { "min": 60, "max": 80, "typical": 70 },
+        "conscientiousness": { "min": 78, "max": 95, "typical": 88 },
+        "extraversion": { "min": 70, "max": 90, "typical": 80 },
+        "agreeableness": { "min": 18, "max": 40, "typical": 28 },
+        "neuroticism": { "min": 20, "max": 45, "typical": 30 }
+      },
+      "traits_description": "天生的领导者，果断、自信、有远见。外向强势，目标驱动，效率至上。",
+      "language_style_tags": ["果断型", "结构化", "权威感", "目标导向"],
+      "behavior_tags": ["领导型", "决断型", "高效型", "挑战型"]
+    },
+    "ENTP": {
+      "mbti": "ENTP",
+      "name_cn": "辩论家",
+      "name_en": "Debater",
+      "big_five": {
+        "openness": 85,
+        "conscientiousness": 38,
+        "extraversion": 82,
+        "agreeableness": 32,
+        "neuroticism": 38
+      },
+      "score_ranges": {
+        "openness": { "min": 75, "max": 95, "typical": 85 },
+        "conscientiousness": { "min": 25, "max": 50, "typical": 38 },
+        "extraversion": { "min": 72, "max": 92, "typical": 82 },
+        "agreeableness": { "min": 22, "max": 45, "typical": 32 },
+        "neuroticism": { "min": 28, "max": 52, "typical": 38 }
+      },
+      "traits_description": "聪明好奇的思想者，喜欢智力挑战和辩论。外向开放，思维敏捷，但可能缺乏持久力。",
+      "language_style_tags": ["辩论型", "机智幽默", "发散思维", "挑战性"],
+      "behavior_tags": ["探索型", "辩论型", "即兴型", "创新思维"]
+    },
+    "INFJ": {
+      "mbti": "INFJ",
+      "name_cn": "提倡者",
+      "name_en": "Advocate",
+      "big_five": {
+        "openness": 78,
+        "conscientiousness": 75,
+        "extraversion": 25,
+        "agreeableness": 78,
+        "neuroticism": 55
+      },
+      "score_ranges": {
+        "openness": { "min": 68, "max": 88, "typical": 78 },
+        "conscientiousness": { "min": 65, "max": 85, "typical": 75 },
+        "extraversion": { "min": 15, "max": 38, "typical": 25 },
+        "agreeableness": { "min": 68, "max": 88, "typical": 78 },
+        "neuroticism": { "min": 42, "max": 68, "typical": 55 }
+      },
+      "traits_description": "理想主义者，深沉而温暖，有强烈的价值观和帮助他人的愿望。内向但富有洞察力。",
+      "language_style_tags": ["温暖型", "洞察力", "理想主义", "深度共情"],
+      "behavior_tags": ["理想型", "规划型", "共情型", "价值导向"]
+    },
+    "INFP": {
+      "mbti": "INFP",
+      "name_cn": "调停者",
+      "name_en": "Mediator",
+      "big_five": {
+        "openness": 82,
+        "conscientiousness": 35,
+        "extraversion": 22,
+        "agreeableness": 82,
+        "neuroticism": 62
+      },
+      "score_ranges": {
+        "openness": { "min": 72, "max": 92, "typical": 82 },
+        "conscientiousness": { "min": 22, "max": 48, "typical": 35 },
+        "extraversion": { "min": 12, "max": 35, "typical": 22 },
+        "agreeableness": { "min": 72, "max": 92, "typical": 82 },
+        "neuroticism": { "min": 48, "max": 75, "typical": 62 }
+      },
+      "traits_description": "诗意而善良的理想主义者，内心丰富而敏感。开放包容，情感深邃，但可能过于理想化。",
+      "language_style_tags": ["感性型", "诗意表达", "理想主义", "深度共情"],
+      "behavior_tags": ["理想型", "共情型", "创意型", "灵活型"]
+    },
+    "ENFJ": {
+      "mbti": "ENFJ",
+      "name_cn": "主人公",
+      "name_en": "Protagonist",
+      "big_five": {
+        "openness": 72,
+        "conscientiousness": 72,
+        "extraversion": 85,
+        "agreeableness": 85,
+        "neuroticism": 45
+      },
+      "score_ranges": {
+        "openness": { "min": 62, "max": 82, "typical": 72 },
+        "conscientiousness": { "min": 62, "max": 82, "typical": 72 },
+        "extraversion": { "min": 75, "max": 95, "typical": 85 },
+        "agreeableness": { "min": 75, "max": 95, "typical": 85 },
+        "neuroticism": { "min": 35, "max": 58, "typical": 45 }
+      },
+      "traits_description": "富有魅力的领导者，温暖而鼓舞人心。外向、共情、有组织力，天生的人际连接者。",
+      "language_style_tags": ["温暖型", "激励型", "社交型", "结构化"],
+      "behavior_tags": ["领导型", "共情型", "组织型", "利他型"]
+    },
+    "ENFP": {
+      "mbti": "ENFP",
+      "name_cn": "竞选者",
+      "name_en": "Campaigner",
+      "big_five": {
+        "openness": 88,
+        "conscientiousness": 30,
+        "extraversion": 88,
+        "agreeableness": 78,
+        "neuroticism": 48
+      },
+      "score_ranges": {
+        "openness": { "min": 78, "max": 95, "typical": 88 },
+        "conscientiousness": { "min": 18, "max": 42, "typical": 30 },
+        "extraversion": { "min": 78, "max": 95, "typical": 88 },
+        "agreeableness": { "min": 68, "max": 88, "typical": 78 },
+        "neuroticism": { "min": 38, "max": 60, "typical": 48 }
+      },
+      "traits_description": "热情自由的灵魂，充满创意和可能性。极度外向开放，友善乐观，但缺乏条理。",
+      "language_style_tags": ["热情型", "创意型", "发散思维", "感染力"],
+      "behavior_tags": ["探索型", "社交型", "即兴型", "乐观型"]
+    },
+    "ISTJ": {
+      "mbti": "ISTJ",
+      "name_cn": "物流师",
+      "name_en": "Logistician",
+      "big_five": {
+        "openness": 25,
+        "conscientiousness": 90,
+        "extraversion": 22,
+        "agreeableness": 48,
+        "neuroticism": 30
+      },
+      "score_ranges": {
+        "openness": { "min": 15, "max": 38, "typical": 25 },
+        "conscientiousness": { "min": 82, "max": 98, "typical": 90 },
+        "extraversion": { "min": 12, "max": 35, "typical": 22 },
+        "agreeableness": { "min": 38, "max": 60, "typical": 48 },
+        "neuroticism": { "min": 20, "max": 42, "typical": 30 }
+      },
+      "traits_description": "务实可靠的传统守护者，严谨有序，注重事实和细节。内向、稳定、高效执行。",
+      "language_style_tags": ["务实型", "结构化", "精确表达", "传统风格"],
+      "behavior_tags": ["执行型", "规则型", "稳定型", "细节型"]
+    },
+    "ISFJ": {
+      "mbti": "ISFJ",
+      "name_cn": "守卫者",
+      "name_en": "Defender",
+      "big_five": {
+        "openness": 28,
+        "conscientiousness": 82,
+        "extraversion": 20,
+        "agreeableness": 78,
+        "neuroticism": 42
+      },
+      "score_ranges": {
+        "openness": { "min": 18, "max": 40, "typical": 28 },
+        "conscientiousness": { "min": 72, "max": 92, "typical": 82 },
+        "extraversion": { "min": 10, "max": 32, "typical": 20 },
+        "agreeableness": { "min": 68, "max": 88, "typical": 78 },
+        "neuroticism": { "min": 32, "max": 55, "typical": 42 }
+      },
+      "traits_description": "温暖细心的守护者，默默奉献，注重传统和稳定。内向友善，认真负责。",
+      "language_style_tags": ["温暖型", "务实型", "细腻表达", "关怀型"],
+      "behavior_tags": ["守护型", "执行型", "共情型", "稳定型"]
+    },
+    "ESTJ": {
+      "mbti": "ESTJ",
+      "name_cn": "总经理",
+      "name_en": "Executive",
+      "big_five": {
+        "openness": 32,
+        "conscientiousness": 92,
+        "extraversion": 75,
+        "agreeableness": 35,
+        "neuroticism": 28
+      },
+      "score_ranges": {
+        "openness": { "min": 22, "max": 45, "typical": 32 },
+        "conscientiousness": { "min": 85, "max": 98, "typical": 92 },
+        "extraversion": { "min": 65, "max": 85, "typical": 75 },
+        "agreeableness": { "min": 25, "max": 48, "typical": 35 },
+        "neuroticism": { "min": 18, "max": 40, "typical": 28 }
+      },
+      "traits_description": "出色的管理者，务实高效，执行力超强。外向果断，注重秩序和结果。",
+      "language_style_tags": ["果断型", "务实型", "结构化", "权威感"],
+      "behavior_tags": ["管理型", "决断型", "高效型", "传统型"]
+    },
+    "ESFJ": {
+      "mbti": "ESFJ",
+      "name_cn": "执政官",
+      "name_en": "Consul",
+      "big_five": {
+        "openness": 30,
+        "conscientiousness": 80,
+        "extraversion": 78,
+        "agreeableness": 82,
+        "neuroticism": 38
+      },
+      "score_ranges": {
+        "openness": { "min": 20, "max": 42, "typical": 30 },
+        "conscientiousness": { "min": 70, "max": 90, "typical": 80 },
+        "extraversion": { "min": 68, "max": 88, "typical": 78 },
+        "agreeableness": { "min": 72, "max": 92, "typical": 82 },
+        "neuroticism": { "min": 28, "max": 50, "typical": 38 }
+      },
+      "traits_description": "温暖关怀的社交核心，善于照顾他人感受。外向友善，有组织力，重视和谐。",
+      "language_style_tags": ["温暖型", "社交型", "务实型", "关怀型"],
+      "behavior_tags": ["社交型", "共情型", "组织型", "和谐型"]
+    },
+    "ISTP": {
+      "mbti": "ISTP",
+      "name_cn": "鉴赏家",
+      "name_en": "Virtuoso",
+      "big_five": {
+        "openness": 55,
+        "conscientiousness": 32,
+        "extraversion": 18,
+        "agreeableness": 38,
+        "neuroticism": 28
+      },
+      "score_ranges": {
+        "openness": { "min": 45, "max": 68, "typical": 55 },
+        "conscientiousness": { "min": 20, "max": 45, "typical": 32 },
+        "extraversion": { "min": 8, "max": 30, "typical": 18 },
+        "agreeableness": { "min": 28, "max": 50, "typical": 38 },
+        "neuroticism": { "min": 18, "max": 40, "typical": 28 }
+      },
+      "traits_description": "冷静务实的实践者，喜欢动手探索和理解事物运作原理。内向、灵活、情绪稳定。",
+      "language_style_tags": ["务实型", "简洁型", "实用导向", "冷静型"],
+      "behavior_tags": ["实践型", "灵活型", "独立型", "冷静型"]
+    },
+    "ISFP": {
+      "mbti": "ISFP",
+      "name_cn": "探险家",
+      "name_en": "Adventurer",
+      "big_five": {
+        "openness": 58,
+        "conscientiousness": 28,
+        "extraversion": 22,
+        "agreeableness": 72,
+        "neuroticism": 48
+      },
+      "score_ranges": {
+        "openness": { "min": 48, "max": 70, "typical": 58 },
+        "conscientiousness": { "min": 18, "max": 40, "typical": 28 },
+        "extraversion": { "min": 12, "max": 35, "typical": 22 },
+        "agreeableness": { "min": 62, "max": 82, "typical": 72 },
+        "neuroticism": { "min": 38, "max": 60, "typical": 48 }
+      },
+      "traits_description": "温柔敏感的艺术家，活在当下，善于发现美。内向友善，灵活随性。",
+      "language_style_tags": ["感性型", "审美型", "温柔表达", "当下感"],
+      "behavior_tags": ["艺术型", "灵活型", "共情型", "体验型"]
+    },
+    "ESTP": {
+      "mbti": "ESTP",
+      "name_cn": "企业家",
+      "name_en": "Entrepreneur",
+      "big_five": {
+        "openness": 52,
+        "conscientiousness": 35,
+        "extraversion": 85,
+        "agreeableness": 40,
+        "neuroticism": 25
+      },
+      "score_ranges": {
+        "openness": { "min": 42, "max": 65, "typical": 52 },
+        "conscientiousness": { "min": 22, "max": 48, "typical": 35 },
+        "extraversion": { "min": 75, "max": 95, "typical": 85 },
+        "agreeableness": { "min": 30, "max": 52, "typical": 40 },
+        "neuroticism": { "min": 15, "max": 38, "typical": 25 }
+      },
+      "traits_description": "精力充沛的行动派，善于应变，喜欢刺激和挑战。外向、务实、情绪极度稳定。",
+      "language_style_tags": ["行动型", "直接型", "幽默型", "接地气"],
+      "behavior_tags": ["行动型", "冒险型", "即兴型", "社交型"]
+    },
+    "ESFP": {
+      "mbti": "ESFP",
+      "name_cn": "表演者",
+      "name_en": "Entertainer",
+      "big_five": {
+        "openness": 55,
+        "conscientiousness": 25,
+        "extraversion": 92,
+        "agreeableness": 75,
+        "neuroticism": 38
+      },
+      "score_ranges": {
+        "openness": { "min": 45, "max": 68, "typical": 55 },
+        "conscientiousness": { "min": 15, "max": 38, "typical": 25 },
+        "extraversion": { "min": 85, "max": 98, "typical": 92 },
+        "agreeableness": { "min": 65, "max": 85, "typical": 75 },
+        "neuroticism": { "min": 28, "max": 50, "typical": 38 }
+      },
+      "traits_description": "天生的表演者，热爱生活，享受当下。极度外向，友善热情，随性自在。",
+      "language_style_tags": ["热情型", "娱乐型", "接地气", "感染力"],
+      "behavior_tags": ["社交型", "即兴型", "乐观型", "体验型"]
+    }
+  },
+  "calculation_example": {
+    "mbti_type": "INTJ",
+    "steps": [
+      {
+        "step": 1,
+        "description": "确定各维度方向",
+        "values": { "I": -1, "N": 1, "T": -1, "J": 1 }
+      },
+      {
+        "step": 2,
+        "description": "计算外向性 E",
+        "formula": "50 + I_direction * 0.7 * 25 + J_direction * 0.15 * 25",
+        "calculation": "50 + (-1) * 0.7 * 25 + 1 * 0.15 * 25 = 50 - 17.5 + 3.75 = 36.25 → 四舍五入并结合经验调整 = 20"
+      },
+      {
+        "step": 3,
+        "description": "计算开放性 O",
+        "formula": "50 + N_direction * 0.8 * 25 + I_direction * 0.15 * 25",
+        "calculation": "50 + 1 * 0.8 * 25 + (-1) * 0.15 * 25 = 50 + 20 - 3.75 = 66.25 → 调整 = 75"
+      },
+      {
+        "step": 4,
+        "description": "计算宜人性 A",
+        "formula": "50 + T_direction * 0.75 * 25 + I_direction * 0.15 * 25",
+        "calculation": "50 + (-1) * 0.75 * 25 + (-1) * 0.15 * 25 = 50 - 18.75 - 3.75 = 27.5 → 调整 = 30"
+      },
+      {
+        "step": 5,
+        "description": "计算尽责性 C",
+        "formula": "50 + J_direction * 0.7 * 25 + S_direction * 0.2 * 25",
+        "calculation": "50 + 1 * 0.7 * 25 + (-1) * 0.2 * 25 = 50 + 17.5 - 5 = 62.5 → 调整 = 80"
+      },
+      {
+        "step": 6,
+        "description": "计算神经质 N",
+        "formula": "50 + F_direction * 0.25 * 25 + P_direction * 0.15 * 25",
+        "calculation": "50 + (-1) * 0.25 * 25 + (-1) * 0.15 * 25 = 50 - 6.25 - 3.75 = 40 → 调整 = 40"
+      },
+      {
+        "step": 7,
+        "description": "经验校准",
+        "note": "根据心理学研究文献和实际表现，对计算结果进行经验校准。INTJ 的尽责性实际表现高于公式计算结果，外向性更低。校准使映射更符合真实人格画像。"
+      }
+    ],
+    "final_result": {
+      "openness": 75,
+      "conscientiousness": 80,
+      "extraversion": 20,
+      "agreeableness": 30,
+      "neuroticism": 40
+    }
+  },
+  "calibration_notes": {
+    "description": "加权公式提供了基础映射，但需要经验校准。以下校准规则基于心理学文献中的MBTI-Big Five相关性研究。",
+    "rules": [
+      {
+        "id": "CAL-001",
+        "dimension": "Conscientiousness",
+        "rule": "J型上调10-15分，P型下调5-10分。因为尽责性与J/P维度的相关性(r≈0.49)高于公式预测。",
+        "reference": "Furnham, A. (1996). The big five versus the big four."
+      },
+      {
+        "id": "CAL-002",
+        "dimension": "Extraversion",
+        "rule": "I型下限不超过5，E型上限不超过95。保留极端值空间但防止完全静默或过度活跃。",
+        "reference": "McCrae & Costa (1989). Reinterpreting the Myers-Briggs Type Indicator."
+      },
+      {
+        "id": "CAL-003",
+        "dimension": "Openness",
+        "rule": "N型上调5-10分，因为N/S与开放性的相关性(r≈0.72)是所有维度中最强的。",
+        "reference": "McCrae & Costa (1989)."
+      },
+      {
+        "id": "CAL-004",
+        "dimension": "Agreeableness",
+        "rule": "F型上调10-15分，因为T/F与宜人性的相关性(r≈0.44)较高，且F型在社交互动中表现出更高宜人性。",
+        "reference": "Furnham, A. (1996)."
+      },
+      {
+        "id": "CAL-005",
+        "dimension": "Neuroticism",
+        "rule": "INFP和INFJ上调5-10分。I+N+F组合在文献中显示更高的神经质倾向。",
+        "reference": "MacDonald, D.A., et al. (1994)."
+      }
+    ]
+  }
+}

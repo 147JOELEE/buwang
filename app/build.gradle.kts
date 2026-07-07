@@ -82,6 +82,14 @@ android {
     }
 }
 
+// 强制锁定 JDK 17（Java Toolchain，跨平台）
+// 避免 AS 自动选用 JDK 21 导致 "无效的源发行版" 编译错误
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 dependencies {
     // Compose BOM
     val composeBom = platform("androidx.compose:compose-bom:2024.01.00")
